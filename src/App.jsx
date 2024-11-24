@@ -1,22 +1,35 @@
 import { useState } from 'react'
 import './App.css'
-import { cards, data } from './components/data.jsx'
+import { data } from './components/data.jsx'
+import Header from './components/header.jsx'
+import CardSection from './components/cardSection.jsx'
 
 
 
 function App() {
-  const [count, setCount] = useState(0)
-  console.log(cards);
-  console.log(data);
+  const [score, setScore] = useState(0);
+  const [topScore, setTopScore] = useState(0);
+  
+  function increaseScore () {
+    setScore( (score) => score + 1 );
+  }
+
+  function increaseTopScore () {
+    setTopScore(score);          //Need to check into this... 
+  }
+
   return (
-    <>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-      
-    </>
+    <div className='container'>
+      <Header 
+       score={score}
+       topScore={topScore}
+      />
+      <CardSection 
+        pokemons = {data}
+        setScore = {increaseScore}
+        setTopScore = {increaseTopScore}
+      />
+    </div>
   )
 }
 

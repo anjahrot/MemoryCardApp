@@ -1,0 +1,11 @@
+.cardGrid {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(5, 140px);
+    grid-template-rows: repeat(2, 140px);
+}
+
+.card {
+    width: 140px;
+    border-radius: 10px;
+}

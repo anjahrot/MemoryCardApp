@@ -9,18 +9,17 @@ async function fetchPokemon(url) {
         }
       const data = await response.json();
       data.results.forEach( async (pokemon) => {
-        let data = await fetchPokemonData2(pokemon);  //with async await it returns an object
-        array.push(data)
-    });
+        let data = await fetchPokemonData(pokemon);  //with async await it returns an object
+        array.push(data) 
+      });
     } catch(error) {
         alert(error)
     }
     return array;  
 }
 
-const data = await fetchPokemon(url);
 
-async function fetchPokemonData2 (pokemon) {
+async function fetchPokemonData (pokemon) {
     let pokemonUrl = pokemon.url;
     try {
         const response = await fetch(pokemonUrl);
@@ -36,26 +35,28 @@ async function fetchPokemonData2 (pokemon) {
       }
 }
 
-function fetchPokemonCards(url) {
-    let pokemonArray = [];
-    fetch(url)
-    .then(response => response.json())
-    .then(function(allpokemon){
-      allpokemon.results.forEach(function(pokemon){
-        fetchPokemonData(pokemonArray, pokemon); 
-      })
-     })
-     return pokemonArray;
-  }
-  
-  function fetchPokemonData(array, pokemon){
-    let url = pokemon.url // <--- this is saving the pokemon url to a variable to us in a fetch.(Ex: https://pokeapi.co/api/v2/pokemon/1/)
-      fetch(url)
-      .then(response => response.json())
-      .then(function(pokeData){
-      array.push({id: crypto.randomUUID(), name: pokeData.name, img: pokeData.sprites.front_shiny})
-      })
-    }
+const data = await fetchPokemon(url);
 
-const cards = fetchPokemonCards(url);  
-export {cards, data};
+// function fetchPokemonCards(url) {
+//     let pokemonArray = [];
+//     fetch(url)
+//     .then(response => response.json())
+//     .then(function(allpokemon){
+//       allpokemon.results.forEach(function(pokemon){
+//         fetchPokemonData(pokemonArray, pokemon); 
+//       })
+//      })
+//      return pokemonArray;
+//   }
+  
+//   function fetchPokemonData(array, pokemon){
+//     let url = pokemon.url // <--- this is saving the pokemon url to a variable to us in a fetch.(Ex: https://pokeapi.co/api/v2/pokemon/1/)
+//       fetch(url)
+//       .then(response => response.json())
+//       .then(function(pokeData){
+//       array.push({id: crypto.randomUUID(), name: pokeData.name, img: pokeData.sprites.front_shiny})
+//       })
+//     }
+
+// const cards = fetchPokemonCards(url);  
+export {data};
