@@ -1,14 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-import { data } from './components/data.jsx'
+import {data} from './components/data.jsx'
 import Header from './components/header.jsx'
 import CardSection from './components/cardSection.jsx'
 
 
 
 function App() {
-  const pokemonData = data;
-  console.log(pokemonData);
+  
+  const [cardData, setCardData] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect( () => {
+     let ignore = false;
+     if(!ignore){
+      setCardData(data);
+      setLoaded(true);
+     }
+     return () => {
+      ignore = true;
+     }
+  }, []);
+  
   const [score, setScore] = useState(0);
   const [topScore, setTopScore] = useState(0);
   
@@ -19,7 +32,8 @@ function App() {
   function increaseTopScore () {
     setTopScore(score);          //Need to check into this... 
   }
-
+  
+  if(loaded){
   return (
     <div className='container'>
       <Header 
@@ -27,12 +41,19 @@ function App() {
        topScore={topScore}
       />
       <CardSection 
-        pokemons = {pokemonData}
+        pokemons = {cardData}
         setScore = {increaseScore}
         setTopScore = {increaseTopScore}
       />
     </div>
   )
+} 
+
+return (
+  <div className='container'>
+    <h2>Is loading...</h2>
+  </div>
+)
 }
 
 export default App

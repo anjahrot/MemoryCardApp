@@ -1,7 +1,6 @@
 import '../styles/cardSection.css'
 
 export default function CardSection ({pokemons, setScore, setTopScore}) {
-
     console.log(pokemons);
     return (
         <>
