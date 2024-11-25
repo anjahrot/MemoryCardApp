@@ -1,11 +1,18 @@
 .cardGrid {
     display: grid;
     justify-content: center;
-    grid-template-columns: repeat(5, 140px);
-    grid-template-rows: repeat(2, 140px);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 30px;
 }
 
 .card {
-    width: 140px;
+    border: 1px solid black;
     border-radius: 10px;
+    text-align: center;
+}
+
+.card > img {
+    height: 150px;
+    width: auto;
 }

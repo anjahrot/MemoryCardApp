@@ -7,6 +7,8 @@ import CardSection from './components/cardSection.jsx'
 
 
 function App() {
+  const pokemonData = data;
+  console.log(pokemonData);
   const [score, setScore] = useState(0);
   const [topScore, setTopScore] = useState(0);
   
@@ -25,7 +27,7 @@ function App() {
        topScore={topScore}
       />
       <CardSection 
-        pokemons = {data}
+        pokemons = {pokemonData}
         setScore = {increaseScore}
         setTopScore = {increaseTopScore}
       />
