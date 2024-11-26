@@ -31,6 +31,7 @@ function App() {
   useEffect( () => {
     async function fetchPokemon(url) {
       let array = [];
+      let ignore = false;
       try {
         const response = await fetch(url, {mode: 'cors'});
         if(!response.ok) {
@@ -44,8 +45,13 @@ function App() {
       } catch(error) {
           alert(error)
       }
+      if(!ignore){
       setCardData(array);
     };
+    return () => {
+      ignore = true;
+    };
+  }
 
     fetchPokemon(url);
   }, []);

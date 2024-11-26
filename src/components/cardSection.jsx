@@ -9,9 +9,14 @@ function addToClickedList(data) {
 
 export default function CardSection ({pokemons, shuffleCards, currentScore, currentTopScore, increaseScore, resetScore, increaseTopScore}) {
     const [newGame, setNewGame] = useState(false);
+    const [wonGame, setWonGame] = useState(false);
 
     function handleNewGame () {
         setNewGame(true);
+    }
+
+    function handleWonGame () {
+        setWonGame(true);
     }
 
     function checkUpdateTopScore () {
@@ -23,11 +28,30 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
     }
 
     let newGameContent;
+    let message;
+    if(wonGame) {
+        message = (
+            <h2>Good job! You caught all 10 of them!</h2>
+        )
+    } else {
+        message = (
+            <>
+              <h2>Game Over</h2>
+              <h3>You fetched {currentScore} pokemons. Click button to try and fetch them all!</h3>
+            </>
+        )
+    }
     if(newGame){
         newGameContent = (
-            <button onClick={() => setNewGame(false)}>
+            <>
+             <button onClick={() => {
+                setNewGame(false);
+                resetScore();
+            }}>
                 Play Again!
-            </button>
+             </button>
+             {message}
+            </>
         );
     }
 
@@ -37,7 +61,7 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
             <div className="cardGrid">
                 {pokemons.map((pokemon) => (
                     <Card key={pokemon.id} pokemon={pokemon} shuffleCards={shuffleCards} currentScore={currentScore} currentTopScore={currentTopScore} 
-                    increaseScore={increaseScore} resetScore={resetScore} checkUpdate={checkUpdateTopScore} increaseTopScore={increaseTopScore} handleNewGame = {handleNewGame}/>        
+                    increaseScore={increaseScore} checkUpdate={checkUpdateTopScore} increaseTopScore={increaseTopScore} handleNewGame = {handleNewGame} newGame = {newGame} handleWonGame={handleWonGame}/>        
                 ))}
             </div>
             {newGameContent}
@@ -45,23 +69,27 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
     );
 }
 
-function Card ({pokemon, shuffleCards, currentScore, increaseScore, resetScore, checkUpdate, increaseTopScore, handleNewGame}) {
+function Card ({pokemon, shuffleCards, currentScore, increaseScore, checkUpdate, increaseTopScore, handleNewGame, newGame, handleWonGame}) {
 
     function handleClick(pokemon) {
+        if(!newGame) {
         if(hasClicked.has(pokemon)){
-            console.log('Game Over');
             hasClicked = new Set();  //Reset list
             if(checkUpdate()){
                increaseTopScore(currentScore) 
             }
             handleNewGame(); //Should somehow lock game until button is clicked for new Game
-            resetScore();
         } else {           
             addToClickedList(pokemon);
             increaseScore();
-            shuffleCards();  
-            //win condition - check if 10 pokemons in set..
+            if(currentScore === 9) {
+                handleWonGame();
+                handleNewGame();
+            } else {
+                shuffleCards();  
+            }
         }
+     }
     }
 
 
