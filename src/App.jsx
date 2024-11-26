@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import {data} from './components/data.jsx'
 import Header from './components/header.jsx'
 import CardSection from './components/cardSection.jsx'
 
@@ -9,18 +8,49 @@ import CardSection from './components/cardSection.jsx'
 function App() {
   
   const [cardData, setCardData] = useState([]);
-  const [loaded, setLoaded] = useState(false);
+  
+
+  //Fetch data from API only on mounting with useEffect
+  const url = 'https://pokeapi.co/api/v2/pokemon?limit=10'
+
+  async function fetchPokemonData (pokemon) {
+    let pokemonUrl = pokemon.url;
+    try {
+        const response = await fetch(pokemonUrl);
+        if(!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+          }
+        const data = await response.json();
+        const pokeData = {id: crypto.randomUUID(), name: data.name, img: data.sprites.front_shiny};
+        return pokeData;
+      } catch(error) {
+          alert(error)
+      }
+}
 
   useEffect( () => {
-     let ignore = false;
-     if(!ignore){
-      setCardData(data);
-      setLoaded(true);
-     }
-     return () => {
-      ignore = true;
-     }
+    async function fetchPokemon(url) {
+      let array = [];
+      try {
+        const response = await fetch(url, {mode: 'cors'});
+        if(!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+          }
+        const data = await response.json();
+        for(const pokemon of data.results){
+          let data = await fetchPokemonData(pokemon);
+          array.push(data) 
+        };
+      } catch(error) {
+          alert(error)
+      }
+      setCardData(array);
+    };
+
+    fetchPokemon(url);
   }, []);
+
+  
   
   const [score, setScore] = useState(0);
   const [topScore, setTopScore] = useState(0);
@@ -30,10 +60,9 @@ function App() {
   }
 
   function increaseTopScore () {
-    setTopScore(score);          //Need to check into this... 
+    setTopScore(score);          
   }
   
-  if(loaded){
   return (
     <div className='container'>
       <Header 
@@ -46,14 +75,7 @@ function App() {
         setTopScore = {increaseTopScore}
       />
     </div>
-  )
-} 
-
-return (
-  <div className='container'>
-    <h2>Is loading...</h2>
-  </div>
-)
+    )
 }
 
 export default App
