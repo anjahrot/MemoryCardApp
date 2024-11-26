@@ -50,7 +50,7 @@ function App() {
     fetchPokemon(url);
   }, []);
 
-  
+
   
   const [score, setScore] = useState(0);
   const [topScore, setTopScore] = useState(0);
@@ -59,9 +59,25 @@ function App() {
     setScore( (score) => score + 1 );
   }
 
-  function increaseTopScore () {
+  function resetScore () {
+    setScore(0);
+  }
+
+  function increaseTopScore (score) {
     setTopScore(score);          
   }
+
+ function shuffleCards () {
+  let newArray = cardData;
+  let randomIndex, temporaryValue;
+  for(let i=cardData.length-1;i>=0;i--){
+    randomIndex = Math.floor(Math.random()*(i+1));
+    temporaryValue = newArray[i];
+    newArray[i] = newArray[randomIndex];
+    newArray[randomIndex] = temporaryValue;   
+  }
+  setCardData(newArray);
+ }
   
   return (
     <div className='container'>
@@ -71,8 +87,12 @@ function App() {
       />
       <CardSection 
         pokemons = {cardData}
-        setScore = {increaseScore}
-        setTopScore = {increaseTopScore}
+        shuffleCards = {shuffleCards}
+        currentScore = {score}
+        currentTopScore = {topScore}
+        increaseScore = {increaseScore}
+        resetScore = {resetScore}
+        increaseTopScore = {increaseTopScore}
       />
     </div>
     )
