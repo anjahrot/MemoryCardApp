@@ -11,13 +11,7 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
     const [newGame, setNewGame] = useState(false);
     const [wonGame, setWonGame] = useState(false);
 
-    function handleNewGame () {
-        setNewGame(true);
-    }
-
-    function handleWonGame () {
-        setWonGame(true);
-    }
+    const [flipped, setFlipped] = useState(false);
 
     function checkUpdateTopScore () {
         let boolean = false;
@@ -26,6 +20,31 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
         }
         return boolean;
     }
+    
+    function handleClick(pokemon) {
+        if(!newGame) {
+        setFlipped(true);
+        if(hasClicked.has(pokemon)){
+            hasClicked = new Set();  //Reset list
+            if(checkUpdateTopScore()){
+               increaseTopScore(currentScore) 
+            }
+            setNewGame(true); //Should somehow lock game until button is clicked for new Game, fixed with adding if-statement to handleClick
+        } else {           
+            addToClickedList(pokemon);
+            increaseScore();
+            if(currentScore === 9) {
+                setWonGame(true);
+                setNewGame(true);
+            } else {
+                shuffleCards();  
+                setTimeout(() => {
+                    setFlipped(false);
+                }, 1000);
+            } 
+         }
+        }
+     }
 
     let newGameContent;
     let message;
@@ -46,6 +65,7 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
             <>
              <button onClick={() => {
                 setNewGame(false);
+                setFlipped(false);
                 resetScore();
             }}>
                 Play Again!
@@ -60,8 +80,8 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
             <h2>Hit each pokemon only once...</h2>
             <div className="cardGrid">
                 {pokemons.map((pokemon) => (
-                    <Card key={pokemon.id} pokemon={pokemon} shuffleCards={shuffleCards} currentScore={currentScore} currentTopScore={currentTopScore} 
-                    increaseScore={increaseScore} checkUpdate={checkUpdateTopScore} increaseTopScore={increaseTopScore} handleNewGame = {handleNewGame} newGame = {newGame} handleWonGame={handleWonGame}/>        
+                    <Card key={pokemon.id} pokemon={pokemon} flipped={flipped} handleClick={handleClick}
+                     />        
                 ))}
             </div>
             {newGameContent}
@@ -69,34 +89,24 @@ export default function CardSection ({pokemons, shuffleCards, currentScore, curr
     );
 }
 
-function Card ({pokemon, shuffleCards, currentScore, increaseScore, checkUpdate, increaseTopScore, handleNewGame, newGame, handleWonGame}) {
+function Card ({pokemon, flipped, handleClick}) {
+    
 
-    function handleClick(pokemon) {
-        if(!newGame) {
-        if(hasClicked.has(pokemon)){
-            hasClicked = new Set();  //Reset list
-            if(checkUpdate()){
-               increaseTopScore(currentScore) 
-            }
-            handleNewGame(); //Should somehow lock game until button is clicked for new Game
-        } else {           
-            addToClickedList(pokemon);
-            increaseScore();
-            if(currentScore === 9) {
-                handleWonGame();
-                handleNewGame();
-            } else {
-                shuffleCards();  
-            }
-        }
-     }
+    function capitalizeFirstLetter (str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-
     return (
-        <div className="card" onClick={ () => handleClick(pokemon.id)}>
-            <img className="frontImg" src={pokemon.img}></img>
-            <h3>{pokemon.name}</h3>
+         <div className={`card ${flipped ? "flipped" : ""}`} onClick={ () => handleClick(pokemon.id)}>
+            <div className="card-inner">
+                <div className="card front">
+                    <img className="frontImg" src={pokemon.img}></img>
+                    <h3>{capitalizeFirstLetter(pokemon.name)}</h3>
+                </div>
+                <div className="card back">
+                    
+                </div>
+            </div>
         </div>
     );
 }
