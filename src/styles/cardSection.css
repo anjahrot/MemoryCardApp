@@ -47,7 +47,6 @@
 }
 
 .card.front {
-    transform: rotateY(0deg);
     background-color: rgb(237, 242, 176);
     border: 2px solid rgb(19, 66, 135);
     color: rgb(19, 66, 135);

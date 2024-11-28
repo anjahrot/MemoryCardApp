@@ -1,6 +1,8 @@
 import '../styles/cardSection.css'
 import {useState} from 'react'
 
+import pokeballImg from '../assets/pokemon-pokeball-legue-seeklogo.png'
+
 let hasClicked = new Set();
 
 function addToClickedList(data) {
@@ -105,7 +107,7 @@ function Card ({pokemon, flipped, handleClick}) {
                     <h3>{capitalizeFirstLetter(pokemon.name)}</h3>
                 </div>
                 <div className="card back">
-                    <img className="backImg" src='../src/assets/pokemon-pokeball-legue-seeklogo.png'></img>
+                    <img className="backImg" src={pokeballImg}></img>
                 </div>
             </div>
         </div>
