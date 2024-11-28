@@ -6,7 +6,8 @@ export default function Header ({score, topScore}) {
     return (
         <div className="header">
             <div className="title">
-                <h1>Pokemon Memory Card Game</h1>
+                <img className="logo" src='../src/assets/pokemon-seeklogo.png'></img>
+                <h1>Memory Card Game</h1>
             </div>
             <Scoreboard 
              score= {score}
